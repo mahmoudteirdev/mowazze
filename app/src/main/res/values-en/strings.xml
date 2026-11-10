@@ -10,6 +10,7 @@
     <string name="levels_sub">Choose the mode you want to use. You can change it anytime in settings.</string>
     <string name="level_root">Root</string>
     <string name="level_root_unavailable">Unavailable · Device is not rooted</string>
+    <string name="level_root_available">Available · Full network &amp; kernel control</string>
     <string name="level_shizuku">Shizuku</string>
     <string name="level_shizuku_sub">Near-complete control · Enabled via Developer Settings</string>
     <string name="level_best">Best available</string>
@@ -27,6 +28,12 @@
     <string name="info_noroot_3">Requires proxy configuration on connecting device (8245)</string>
     <string name="cta_start_shizuku">Start with Shizuku</string>
     <string name="cta_start_noroot">Start without root</string>
+    <string name="toast_root_set">Full Root mode activated</string>
+    <string name="toast_root_denied">Root permission denied · You can retry</string>
+    <string name="info_title_root">What you get with Root</string>
+    <string name="info_root_1">Bypass carrier tethering limits with TTL mangling</string>
+    <string name="info_root_2">Share active VPN &amp; network-wide AdBlock for all devices</string>
+    <string name="info_root_3">Spoof MAC address &amp; drop blocked devices in the kernel</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>

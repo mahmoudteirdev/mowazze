@@ -11,6 +11,7 @@
     <string name="levels_sub">اختر المستوى اللي بدك تشتغل عليه. تقدر تغيّره بعدين من الإعدادات.</string>
     <string name="level_root">روت</string>
     <string name="level_root_unavailable">غير متاح · الجهاز مو مروّت</string>
+    <string name="level_root_available">متاح · تحكم كامل بالشبكة والنواة</string>
     <string name="level_shizuku">Shizuku</string>
     <string name="level_shizuku_sub">تحكم شبه كامل · تفعيل من إعدادات المطوّر</string>
     <string name="level_best">الأفضل المتاح</string>
@@ -28,6 +29,12 @@
     <string name="info_noroot_3">تتطلب ضبط بروكسي على الجهاز المتصل (8245)</string>
     <string name="cta_start_shizuku">ابدأ بـ Shizuku</string>
     <string name="cta_start_noroot">ابدأ بدون روت</string>
+    <string name="toast_root_set">تم تفعيل نمط الروت الكامل</string>
+    <string name="toast_root_denied">تم رفض إذن الروت · يمكنك المحاولة ثانية</string>
+    <string name="info_title_root">شو راح تحصل عليه مع الروت</string>
+    <string name="info_root_1">تخطي حظر الهوتسبوت (TTL) ومشاركة VPN</string>
+    <string name="info_root_2">حظر إعلانات الشبكة وتغيير عنوان الـ MAC</string>
+    <string name="info_root_3">حظر الأجهزة المتطفلة مباشرة من النواة</string>
     <string name="back">رجوع</string>
     <string name="cancel">إلغاء</string>
     <string name="close">إغلاق</string>

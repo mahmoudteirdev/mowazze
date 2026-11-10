@@ -126,11 +126,20 @@ class OnboardingModelTest {
         }
 
     @Test
-    fun `root can't be picked even on a rooted device`() = onboardingTest(FakeProbe(root = true)) { f ->
+    fun `root can be picked on a rooted device and is best level`() = onboardingTest(FakeProbe(root = true)) { f ->
         scanned(f)
         assertTrue(f.state.rootFound)
-        f.model.select(PermissionLevel.ROOT)
-        assertEquals(PermissionLevel.SHIZUKU, f.state.selected)
+        assertEquals(PermissionLevel.ROOT, f.state.bestLevel)
+        assertEquals(PermissionLevel.ROOT, f.state.selected)
+    }
+
+    @Test
+    fun `confirming root requests permission and finishes if granted`() = onboardingTest(FakeProbe(root = true)) { f ->
+        scanned(f)
+        f.probe.rootAnswer.complete(true)
+        f.model.confirmLevel()
+        advanceUntilIdle()
+        assertEquals(PermissionLevel.ROOT, f.savedLevel)
     }
 
     @Test

@@ -32,9 +32,10 @@ data class OnboardingState(
     val denied: Boolean = false,
     val noRootSupported: Boolean = true,
 ) {
-    /** Which level gets the "best available" chip. The root flow isn't designed yet, so never root. */
+    /** Which level gets the "best available" chip. Priority: ROOT -> SHIZUKU -> NO_ROOT */
     val bestLevel: PermissionLevel
         get() = when {
+            rootFound -> PermissionLevel.ROOT
             shizuku != ShizukuStatus.NOT_INSTALLED -> PermissionLevel.SHIZUKU
             noRootSupported -> PermissionLevel.NO_ROOT
             else -> PermissionLevel.SHIZUKU
@@ -119,7 +120,7 @@ class OnboardingModel(
 
     fun select(level: PermissionLevel) {
         when (level) {
-            PermissionLevel.ROOT -> return
+            PermissionLevel.ROOT -> if (!_state.value.rootFound) return
             PermissionLevel.SHIZUKU -> if (_state.value.shizuku == ShizukuStatus.NOT_INSTALLED) return
             PermissionLevel.NO_ROOT -> if (!_state.value.noRootSupported) return
         }
@@ -129,10 +130,25 @@ class OnboardingModel(
     fun confirmLevel() {
         val current = _state.value
         if (current.step != OnboardingStep.LEVELS) return
-        when {
-            current.selected != PermissionLevel.SHIZUKU -> finish(PermissionLevel.NO_ROOT)
-            current.shizuku == ShizukuStatus.READY -> finish(PermissionLevel.SHIZUKU)
-            else -> _state.update { it.copy(step = OnboardingStep.LINK, denied = false) }
+        when (current.selected) {
+            PermissionLevel.ROOT -> {
+                scope.launch {
+                    val granted = probe.requestRootPermission()
+                    if (granted) {
+                        finish(PermissionLevel.ROOT)
+                    } else {
+                        _state.update { it.copy(denied = true) }
+                    }
+                }
+            }
+            PermissionLevel.SHIZUKU -> {
+                if (current.shizuku == ShizukuStatus.READY) {
+                    finish(PermissionLevel.SHIZUKU)
+                } else {
+                    _state.update { it.copy(step = OnboardingStep.LINK, denied = false) }
+                }
+            }
+            PermissionLevel.NO_ROOT -> finish(PermissionLevel.NO_ROOT)
         }
     }
 

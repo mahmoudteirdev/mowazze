@@ -66,6 +66,7 @@ fun OnboardingScreen(viewModel: OnboardingViewModel = viewModel()) {
     val model = viewModel.model
     val state by model.state.collectAsStateWithLifecycle()
     val snackbar = LocalSnackbar.current
+    val rootMessage = stringResource(R.string.toast_root_set)
     val linkedMessage = stringResource(R.string.toast_linked)
     val noRootMessage = stringResource(R.string.toast_noroot_set)
 
@@ -76,7 +77,12 @@ fun OnboardingScreen(viewModel: OnboardingViewModel = viewModel()) {
     LaunchedEffect(model) {
         model.resetIfFinished()
         model.finished.collect { level ->
-            snackbar.show(if (level == PermissionLevel.SHIZUKU) linkedMessage else noRootMessage)
+            val msg = when (level) {
+                PermissionLevel.ROOT -> rootMessage
+                PermissionLevel.SHIZUKU -> linkedMessage
+                PermissionLevel.NO_ROOT -> noRootMessage
+            }
+            snackbar.show(msg)
         }
     }
     BackHandler(enabled = state.step != OnboardingStep.WELCOME) { model.back() }
@@ -179,8 +185,9 @@ private fun ScanningStep() {
 @Composable
 private fun LevelsStep(state: OnboardingState, model: OnboardingModel) {
     val context = LocalContext.current
+    val rootSelected = state.selected == PermissionLevel.ROOT
     val shizukuSelected = state.selected == PermissionLevel.SHIZUKU
-    val oneStep = !shizukuSelected || state.shizuku == ShizukuStatus.READY
+    val oneStep = rootSelected || !shizukuSelected || state.shizuku == ShizukuStatus.READY
 
     StepLayout(
         bottom = {
@@ -190,7 +197,13 @@ private fun LevelsStep(state: OnboardingState, model: OnboardingModel) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             MowazzeButton(
-                stringResource(if (shizukuSelected) R.string.cta_start_shizuku else R.string.cta_start_noroot),
+                stringResource(
+                    when {
+                        rootSelected -> R.string.cta_start_root
+                        shizukuSelected -> R.string.cta_start_shizuku
+                        else -> R.string.cta_start_noroot
+                    },
+                ),
                 model::confirmLevel,
                 Modifier.fillMaxWidth(),
             )
@@ -211,11 +224,14 @@ private fun LevelsStep(state: OnboardingState, model: OnboardingModel) {
         }
         LevelGroup {
             LevelOption(
-                selected = false,
-                enabled = false,
+                selected = rootSelected,
+                enabled = state.rootFound,
                 title = stringResource(R.string.level_root),
-                subtitle = stringResource(if (state.rootFound) R.string.level_root_unsupported else R.string.level_root_unavailable),
-                onSelect = {},
+                subtitle = stringResource(if (state.rootFound) R.string.level_root_available else R.string.level_root_unavailable),
+                onSelect = { if (state.rootFound) model.select(PermissionLevel.ROOT) },
+                trailing = if (state.bestLevel == PermissionLevel.ROOT && state.rootFound) {
+                    { InfoChip(stringResource(R.string.level_best), onSelectedCard = rootSelected) }
+                } else null,
             )
             LevelOption(
                 selected = shizukuSelected,
@@ -252,24 +268,37 @@ private fun LevelsStep(state: OnboardingState, model: OnboardingModel) {
                 },
             )
         }
-        if (shizukuSelected) {
-            InfoCard(
-                R.string.info_title_shizuku,
-                listOf(
-                    InfoLine(R.string.info_shizuku_1),
-                    InfoLine(R.string.info_shizuku_2),
-                    InfoLine(R.string.info_shizuku_3, caveat = true),
-                ),
-            )
-        } else {
-            InfoCard(
-                R.string.info_title_noroot,
-                listOf(
-                    InfoLine(R.string.info_noroot_1),
-                    InfoLine(R.string.info_noroot_2),
-                    InfoLine(R.string.info_noroot_3, caveat = true),
-                ),
-            )
+        when {
+            rootSelected -> {
+                InfoCard(
+                    R.string.info_title_root,
+                    listOf(
+                        InfoLine(R.string.info_root_1),
+                        InfoLine(R.string.info_root_2),
+                        InfoLine(R.string.info_root_3),
+                    ),
+                )
+            }
+            shizukuSelected -> {
+                InfoCard(
+                    R.string.info_title_shizuku,
+                    listOf(
+                        InfoLine(R.string.info_shizuku_1),
+                        InfoLine(R.string.info_shizuku_2),
+                        InfoLine(R.string.info_shizuku_3, caveat = true),
+                    ),
+                )
+            }
+            else -> {
+                InfoCard(
+                    R.string.info_title_noroot,
+                    listOf(
+                        InfoLine(R.string.info_noroot_1),
+                        InfoLine(R.string.info_noroot_2),
+                        InfoLine(R.string.info_noroot_3, caveat = true),
+                    ),
+                )
+            }
         }
     }
 }
