@@ -1,0 +1,27 @@
+{
+  "name": "Mowazze",
+  "nativeName": "موزّع",
+  "tagline": "Advanced Wi-Fi & Hotspot Sharing Engine for Android with No-Root, Shizuku, and Root Capabilities",
+  "theme": "blue",
+  "chips": [
+    "Wi-Fi Repeater",
+    "No-Root Proxy",
+    "Shizuku API",
+    "Root Tools"
+  ],
+  "floating": [
+    "v1.0.0",
+    "Wi-Fi Direct",
+    "ROOT READY"
+  ],
+  "ticker": [
+    "SHARE WI-FI TO HOTSPOT",
+    "NO-ROOT EMBEDDED PROXY",
+    "SHIZUKU TETHERING",
+    "TTL BYPASS & VPN HOTSPOT",
+    "NETWORK AD-BLOCK & MAC CHANGER"
+  ],
+  "letter": "M",
+  "colors": {},
+  "mark": null
+}
