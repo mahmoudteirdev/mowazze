@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/readme/header.svg" alt="Mowazze - موزّع" width="100%" />
+  <img src="docs/readme/header.svg" alt="Mowazze - Wi-Fi & Hotspot Sharing Engine" width="100%" />
 </p>
 
 <p align="center">
@@ -9,129 +9,152 @@
   <img src="https://img.shields.io/badge/Shizuku-API%20v23-2B579A?style=for-the-badge" alt="Shizuku" />
   <img src="https://img.shields.io/badge/Root-Magisk%20%7C%20KernelSU%20%7C%20APatch-E53935?style=for-the-badge" alt="Root" />
   <img src="https://img.shields.io/badge/Tests-Passing%20(100%25)-00C853?style=for-the-badge" alt="Tests" />
-  <img src="https://img.shields.io/badge/Language-Arabic%20RTL%20%7C%20English-0D9488?style=for-the-badge" alt="Bilingual" />
+  <img src="https://img.shields.io/badge/Release-v1.0.0-0D9488?style=for-the-badge" alt="Release" />
+  <img src="https://img.shields.io/badge/License-Apache%202.0-blue?style=for-the-badge" alt="License" />
 </p>
 
 ---
 
-## 📖 نظرة عامة (Overview)
+## 📖 Overview
 
-**موزّع (Mowazze)** هو تطبيق أندرويد متطور واحترافي لمشاركة الإنترنت (Wi-Fi Hotspot & Repeater) مبني وفق أحدث معايير الأداء والتصميم الحديث **Jetpack Compose (Material 3)**.
+**Mowazze** is an advanced, production-grade Android hotspot and Wi-Fi repeater engine crafted with **Jetpack Compose (Material 3)** and **Kotlin Coroutines**.
 
-تم تصميم التطبيق ليعمل عبر **ثلاث مستويات مختلفة من الصلاحيات (No-Root / Shizuku / Root)**، مما يمنح المستخدم أقصى درجات المرونة للتحكم في شبكته، وتجاوز قيود الشركات المصنّعة (مثل أجهزة سامسونج التي تفصل شبكة الواي فاي عند تشغيل الهوتسبوت)، مع توفير حزمة أدوات روت خارقة تشمل تخطي حظر الـ TTL، مشاركة الـ VPN، ومنع الإعلانات وتغيير عنوان الماك (MAC Address).
-
----
-
-## ✨ المميزات الرئيسية (Key Features)
-
-### 1. مستويات التشغيل الثلاثة (3 Permission Levels)
-* **بدون روت (No-Root Repeater):**
-  * مشاركة إنترنت الواي فاي عبر تقنية **Wi-Fi Direct** دون الحاجة لإطفاء شبكة الواي فاي الأصلية المتصل بها.
-  * خادم بروكسي مدمج خفيف فائق السرعة مبني بمكتبة **Kotlin Coroutines NIO** على المنفذ `8245`.
-  * تزويد الأجهزة المتصلة بملف الإعداد التلقائي `http://192.168.49.1:8245/proxy.pac`.
-* **عبر Shizuku (Native Hotspot Control):**
-  * التحكم بنقطة الاتصال الرسمية للنظام بدون تعديل النظام أو الحاجة للروت عبر واجهات `TetheringManager` و `Shizuku API v23`.
-  * دعم التبديل التلقائي الذكي بين الهوتسبوت والواي فاي دايركت في محرك `AdaptiveShareEngine`.
-* **أدوات الروت الخارقة (Advanced Root Suite):**
-  * **تخطي حظر الهوتسبوت (TTL Bypass):** تثبيت الـ TTL على `64` (أندرويد/لينكس)، `65` (ويندوز)، أو `128` لإخفاء استهلاك نقطة الاتصال عن شركات الاتصالات وحزم IPv6 (`HL`).
-  * **مشاركة اتصال الـ VPN (VPN Hotspot Sharing):** توجيه حركة مرور الأجهزة المتصلة عبر واجهة `tun+` والـ NAT فورياً.
-  * **حظر إعلانات الشبكة (Network-wide AdBlock):** إعادة توجيه استعلامات DNS لمانع الإعلانات AdGuard DNS لحماية كافة الأجهزة المتصلة بدون تطبيقات إضافية.
-  * **تغيير وتزييف الـ MAC (MAC Address Changer):** استخراج وتزييف وتوليد عناوين MAC عشوائية لبطاقة الواي فاي `wlan0` مع زر استعادة العنوان الأصلي.
-  * **إسقاط حزم الأجهزة على مستوى النواة (Kernel MAC Dropping):** حظر الأجهزة المتطفلة مباشرة عبر جداول `iptables` في النواة.
+Designed to overcome OEM restrictions (such as Samsung devices turning off Wi-Fi when activating a native hotspot), Mowazze operates seamlessly across **three distinct permission tiers: No-Root, Shizuku, and Root**. It provides unmatched flexibility, enterprise-grade traffic control, and an elite suite of root networking tools—including carrier TTL mangling, VPN hotspot sharing, network-wide AdBlock, and MAC address spoofing.
 
 ---
 
-### 2. إدارة الأجهزة واستهلاك البيانات (Devices & Bandwidth Control)
-* **كشف الأجهزة المتصلة لحظياً:** عرض تفاصيل الأجهزة المتصلة مع نوع الجهاز (هاتف، لابتوب، جهاز لوحي).
-* **سقف السرعة لكل جهاز (Speed Limiting):** تحديد سقف استهلاك السرعة لكل متصل (1، 2، 5، 10 ميجابت أو بلا حدود).
-* **الحظر الفوري (Instant Blocking & Undo):** حظر فوري لأي متصل مع إمكانية التراجع الفوري عبر إشعار Snackbar.
-* **الحد الأقصى للمتصلين (Max Devices):** تحديد سقف عدد الأجهزة المسموح باتصالها (1، 2، 3، 5، 8، 10 أو بلا حدود).
-* **باقة البيانات اليومية وتنبيه 80% (Daily Quota):**
-  * تحديد باقة استهلاك يومية (1، 2، 5، 10 جيجابايت أو بلا حد).
-  * شريط تقدم مرئي في بطاقة الاستهلاك اليومي.
-  * إشعار وتنبيه تلقائي عند وصول الاستهلاك إلى 80%.
+## ✨ Key Features
+
+### 1. Three Permission Tiers (Adaptive Sharing Architecture)
+
+* **No-Root (Wi-Fi Direct & Embedded Proxy Repeater):**
+  * Repeats an existing Wi-Fi network over **Wi-Fi Direct (P2P Group)** without disconnecting your phone from Wi-Fi.
+  * Embedded, non-blocking HTTP/HTTPS `CONNECT` proxy server running via **Kotlin Coroutines NIO** on port `8245`.
+  * Built-in Proxy Auto-Configuration (PAC) file served at `http://192.168.49.1:8245/proxy.pac` for zero-friction client setup.
+* **Shizuku (Privileged Native Tethering):**
+  * Direct invocation of Android's private `TetheringManager` through **Shizuku API v23**, creating a true system-level hotspot without modifying `/system` or requiring root binaries.
+  * Adaptive fallback engine automatically detects hardware capabilities and switches dynamically between native hotspot and Wi-Fi Direct.
+* **Advanced Root Suite (Kernel & iptables Integration):**
+  * **Carrier Tethering Bypass (TTL Mangling):** Fixes outgoing packet TTL to `64` (Android / Linux), `65` (Windows), or `128` on both IPv4 (`iptables`) and IPv6 (`ip6tables HL`) to disguise hotspot traffic as standard on-device usage.
+  * **VPN Hotspot Sharing:** Forwards VPN traffic over the hotspot using `iptables -t nat -A POSTROUTING -o tun+ -j MASQUERADE` and IPv4 forwarding.
+  * **Network-wide AdBlock:** Silently redirects all connected device DNS queries (UDP/TCP port 53) to AdGuard DNS (`94.140.14.14`), blocking advertisements without client configuration.
+  * **Hardware MAC Address Changer & Spoofer:** Query, change, or randomize the `wlan0` MAC address using standard Linux socket calls, with one-tap restoration of the hardware original.
+  * **Kernel-level Hardware Dropping:** Blocks unauthorized clients directly in the Linux kernel via `iptables -I FORWARD -m mac --mac-source <MAC> -j DROP`.
 
 ---
 
-### 3. سرعة الاتصال وتجربة المستخدم (Fast Connect & UX)
-* **رمز QR فوري بملء الشاشة:** نافذة منبثقة فائقة السطوع لعرض رمز الاستجابة السريعة (QR Code) لتسهيل مسح الكود من الهواتف الأخرى واللابتوبات.
-* **تعليمات البروكسي للأجهزة:** بطاقة إرشادية مخصصة في الشاشة الرئيسية توضح بدقة عنوان البروكسي (`192.168.49.1:8245`) وزر النسخ بنقرة واحدة.
-* **تصميم عربي أصيل (RTL Native):** دعم اللغة العربية كخيار رئيسي أول بأرقام لاتينية مقروءة وخط `IBM Plex Sans Arabic`، مع دعم كامل للغة الإنجليزية.
-* **دعم الأجهزة اللوحية (Tablet Dual-Pane):** واجهة تتكيف تلقائياً مع الشاشات العريضة عبر نظام `NavigationRail` وعرض الشاشتين جنباً إلى جنب.
-* **الوضع الداكن والفاتح (Dark & Light Theme):** نظام ألوان متكامل متوافق مع مبادئ Material 3 وتباين وصول مريح للعين (Accessibility).
+### 2. Device Management & Bandwidth Control
+
+* **Real-time Client Discovery:** Live device monitoring displaying connected hardware type (Phone, Laptop, Tablet), IP address, and MAC address.
+* **Per-device Bandwidth Throttling:** Throttle individual client speeds (1, 2, 5, 10 Mbps, or Unlimited).
+* **Instant Client Blocking & Undo:** Immediate connection termination with an interactive Snackbar undo action.
+* **Max Client Caps:** Restrict maximum simultaneous connections (1, 2, 3, 5, 8, 10, or Unlimited).
+* **Daily Data Quota & 80% Alerts:**
+  * Configurable daily data quota (1, 2, 5, 10 GB, or Unlimited) persisted in Jetpack DataStore.
+  * High-visibility color-coded progress indicator in the usage overview.
+  * Automatic threshold notification triggered when consumption reaches 80%.
 
 ---
 
-## 📊 مقارنة مستويات الصلاحيات (Capabilities Matrix)
+### 3. Rapid Connect & Modern UX
 
-| الميزة / Capability | بدون روت (No-Root) | عبر Shizuku | بالروت (Root) |
+* **Full-Screen High-Brightness QR Code:** Dedicated high-contrast QR dialog that temporarily raises screen brightness to maximum for instant camera scanning.
+* **Proxy Configuration Card:** Clear visual instructions with one-tap copy buttons for proxy host, port, and PAC URL.
+* **Bilingual & RTL-First:** Native Arabic RTL support with Latin digits and custom `IBM Plex Sans Arabic` typography, paired with a full English localization.
+* **Large Screen & Tablet Dual-Pane:** Responsive layout utilizing `NavigationRail` and master-detail dual panes on screens wider than 840dp.
+* **Expressive Material 3 Theming:** Full support for Dynamic Color, Light and Dark themes, and WCAG AA contrast compliance.
+
+---
+
+## 📊 Capabilities Matrix
+
+| Feature / Capability | No-Root Mode | Shizuku Mode | Root Mode |
 |---|:---:|:---:|:---:|
-| **مشاركة نت الواي فاي (Repeater)** |  (عبر Wi-Fi Direct) |  (إذا كان الجهاز يدعم ذلك) |  (بشكل كامل) |
-| **إنشاء هوتسبوت نظام رسمي** | ❌ (يتطلب إعداد يدوي) |  (مباشر وتلقائي) |  (مباشر وتلقائي) |
-| **قراءة الأجهزة المتصلة** |  (عبر ARP & P2P) |  (TetheringManager) |  (نواة لينكس) |
-| **تحديد سرعة المتصلين** | ❌ (يحتاج روت/شيزوكو) |  (Traffic Shaping) |  (Traffic Shaping) |
-| **حظر الأجهزة** | ❌ (إشعار طلب الصلاحية) |  (قائمة الحظر) |  (إسقاط فوري بالنواة) |
-| **تخطي قيود الـ TTL** | ❌ | ❌ |  (iptables & ip6tables) |
-| **مشاركة إنترنت الـ VPN** | ❌ | ❌ |  (iptables NAT Masquerade) |
-| **مانع الإعلانات الشامل** | ❌ | ❌ |  (DNS Redirection) |
-| **تغيير عنوان الـ MAC** | ❌ | ❌ |  (ip link wlan0) |
+| **Share Active Wi-Fi (Repeater)** | ✔ (Wi-Fi Direct) | ✔ (If hardware allows) | ✔ (Full Stack) |
+| **System Hotspot Broadcast** | ❌ (Manual setup) | ✔ (Automatic) | ✔ (Automatic) |
+| **Connected Client Detection** | ✔ (ARP & P2P) | ✔ (TetheringManager) | ✔ (Linux Kernel) |
+| **Bandwidth & Speed Limiting** | ❌ (Requires Shizuku/Root) | ✔ (Traffic Shaping) | ✔ (Traffic Shaping) |
+| **Device Blocking** | ❌ (Upgrade Sheet) | ✔ (Blocklist) | ✔ (Kernel MAC Drop) |
+| **Carrier TTL Bypass** | ❌ | ❌ | ✔ (iptables & ip6tables) |
+| **Share Active VPN** | ❌ | ❌ | ✔ (iptables NAT Masquerade) |
+| **Network-wide AdBlock** | ❌ | ❌ | ✔ (DNS Redirection) |
+| **MAC Address Changer** | ❌ | ❌ | ✔ (ip link dev wlan0) |
 
 ---
 
-## 🏗️ الهيكل البرمجي (Architecture)
+## 🏗️ Architecture & Project Structure
 
-تم بناء المشروع باتباع أحدث أنماط هندسة برمجيات أندرويد الحديثة (Clean Architecture + MVI/Unidirectional Data Flow):
+The project follows Clean Architecture principles with unidirectional data flow (MVI/Flow):
 
 ```text
 com.mowazze3
 ├── data/
-│   ├── proxy/               # خادم البروكسي المحلي المدمج (MowazzeProxyServer)
-│   ├── root/                # مدير شبكة الروت وتنفيذ أوامر iptables و MAC (RootNetworkManager)
-│   ├── AdaptiveShareEngine  # المحرك المتكيف الذكي (التبديل بين Shizuku و Wi-Fi Direct)
-│   ├── WifiDirectShareEngine# محرك الـ Wi-Fi Direct P2P
-│   ├── ShizukuShareEngine   # محرك الهوتسبوت عبر واجهة Shizuku
-│   ├── DataStoreSettings    # حفظ وتخزين الإعدادات عبر Jetpack DataStore
-│   └── ShareRepository      # المصدر الموحد للبيانات وحالة المشاركة (Single Source of Truth)
-├── domain/                  # النماذج، منطق الأعمال، وحساب الاستهلاك والتحقق
-├── service/                 # الخدمة الأمامية (ShareService) للعمل في الخلفية
+│   ├── proxy/               # Embedded NIO coroutine proxy server (MowazzeProxyServer)
+│   ├── root/                # Root network manager for iptables, NAT & MAC spoofing (RootNetworkManager)
+│   ├── AdaptiveShareEngine  # Smart engine toggling between Shizuku and Wi-Fi Direct
+│   ├── WifiDirectShareEngine# Wi-Fi Direct P2P Group repeater engine
+│   ├── ShizukuShareEngine   # System tethering engine powered by Shizuku API
+│   ├── DataStoreSettings    # Jetpack DataStore persistence implementation
+│   └── ShareRepository      # Single Source of Truth for sharing state & stats
+├── domain/                  # Pure Kotlin models, usage calculations, and contracts
+├── service/                 # Foreground ShareService for background lifecycle management
 └── ui/
-    ├── home/                # الشاشة الرئيسية، كود الـ QR، وتعليمات البروكسي
-    ├── devices/             # شاشة المتصلين، الاستهلاك، ونوافذ السرعة والحظر
-    ├── settings/            # الإعدادات، محدد الباقة، وشيت أدوات الروت المتقدمة (RootToolsSheet)
-    ├── onboarding/          # معالج الإعداد وفحص الصلاحيات وربط Shizuku
-    └── theme/               # توكنز الألوان، الخطوط، والمسافات
+    ├── home/                # Home screen, QR dialog, and proxy connection guide
+    ├── devices/             # Client list, usage stats, speed limits, and blocking
+    ├── settings/            # Settings, data quotas, and Root Tools bottom sheet (RootToolsSheet)
+    ├── onboarding/          # First-run wizard, device probing, and Shizuku linking
+    └── theme/               # Material 3 color schemes, typography, shapes, and tokens
 ```
 
 ---
 
-## 🛠️ متطلبات البناء والتطوير (Building & Setup)
+## 🛠️ Building & Development
 
-1. **Android Studio:** الإصدار الحديث (Hedgehog أو أحدث).
-2. **Java Development Kit (JDK):** يتطلب Java 17+ (يوصى باستخدام JBR الخاص بـ Android Studio):
-   ```powershell
-   $env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
-   ```
-3. **تشغيل كافة اختبارات الوحدة:**
-   ```powershell
-   .\gradlew test
-   ```
-4. **بناء حزمة APK التجريبية (Debug APK):**
-   ```powershell
-   .\gradlew assembleDebug
-   ```
-5. **التثبيت على الهاتف عبر ADB:**
-   ```powershell
-   adb install -r app\build\outputs\apk\debug\app-debug.apk
-   ```
+### Prerequisites
+* **Android Studio:** Hedgehog (2023.1.1) or newer
+* **JDK:** Java 17+ (Android Studio JBR recommended)
+* **Android SDK:** Compile SDK 37, Min SDK 26 (Android 8.0 Oreo)
+
+### Build Commands (PowerShell)
+```powershell
+# Set JAVA_HOME to Android Studio JBR
+$env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
+
+# Run all unit tests
+.\gradlew test
+
+# Build debug APK
+.\gradlew assembleDebug
+
+# Build signed release APK
+.\gradlew assembleRelease
+```
+
+### Installing via ADB
+```powershell
+adb install -r app\build\outputs\apk\release\app-release.apk
+```
 
 ---
 
-## 📄 الترخيص (License)
+## 📦 Releases
 
-هذا المشروع منشور تحت رخصة **Apache License 2.0**. تفاصيل الخطوط وتراخيص خط `IBM Plex Sans Arabic` مضمنة تحت ترخيص **SIL Open Font License (OFL 1.1)**.
+Download pre-compiled and signed APK packages directly from the [GitHub Releases](https://github.com/mahmoudteirdev/mowazze/releases) page.
+
+* **Latest Release:** `v1.0.0`
+* **Package Name:** `com.mowazze3`
+* **Signature Scheme:** APK Signature Scheme v2 (Signed & Verified)
+
+---
+
+## 📄 License
+
+This project is licensed under the **Apache License, Version 2.0**.
+Included fonts (`IBM Plex Sans Arabic`) are licensed under the **SIL Open Font License (OFL 1.1)**.
+See the [LICENSE](LICENSE) file for more information.
 
 ---
 
 <p align="center">
-  صنع بإتقان وشغف لتقديم أفضل تجربة مشاركة إنترنت حرة على أندرويد 🤍
+  Engineered with precision for open, unrestricted Android internet sharing 🌐
 </p>

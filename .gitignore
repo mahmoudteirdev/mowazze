@@ -13,3 +13,5 @@ build/
 *.apk
 *.aab
 *.log
+*.keystore
+*.jks
